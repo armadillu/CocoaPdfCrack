@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
 	if (argc != 4) {
-		printf("usage: CocoaPdfCrack file.pdf dictionary.txt numThreads");
+		printf("usage: CocoaPdfCrack file.pdf dictionary.txt numThreads\n");
 		exit(0);
 	}
 
