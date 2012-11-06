@@ -14,8 +14,7 @@
 
 @interface PDFBruteFroce : NSObject{
 
-	PDFDocument * pdf ;
-	int numThreads ;
+	NSString * pdfPath;
 	FileReader* fileReader;
 	BOOL processing;
 }

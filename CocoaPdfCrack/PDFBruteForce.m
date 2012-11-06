@@ -10,9 +10,9 @@
 
 @implementation PDFBruteFroce
 
--(id)initWithPdfPath:(NSString*) pdfPath dictionaryPath:(NSString*) dictionaryP{
+-(id)initWithPdfPath:(NSString*) pdfPath_ dictionaryPath:(NSString*) dictionaryP{
 
-	pdf = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: pdfPath] ];
+	pdfPath = [pdfPath_ retain];
 	fileReader = [[FileReader alloc] initWithFilePath:dictionaryP];
 	processing = FALSE;
 
@@ -27,10 +27,9 @@
 
 -(void)startProcessing:(int)numThreads_{
 
-	numThreads = numThreads_;
 	processing = TRUE;
 
-	for(int i = 0; i < numThreads; i++){
+	for(int i = 0; i < numThreads_; i++){
 		[NSThread detachNewThreadSelector:@selector(process:) toTarget:self  withObject:[NSNumber numberWithInt:i]];
 	}
 }
@@ -41,14 +40,13 @@
 	int ID = [threadID intValue];
 	unsigned long c = 0;
 	NSString * pass;
-	BOOL found = FALSE;
-	BOOL locked;
 	NSAutoreleasePool *	pool = [[NSAutoreleasePool alloc] init];
+	PDFDocument * pdf = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: pdfPath] ];
 
 	while( true ){
 
 		if(!processing){
-			NSLog(@"Thread %d >> PASS FOUND! >> %@ <<", ID, pass);
+			NSLog(@"Thread %d >> Stopping, password already found!", ID);
 			return;
 		}
 
@@ -57,27 +55,20 @@
 		}
 
 		if (pass == nil){
-			NSLog(@"Thread %d >> PASS NOT FOUND! (%ld passwords tested)", ID, c);
+			NSLog(@"Thread %d >> PASS NOT FOUND on this thread! (%ld tested)", ID, c);
 			return;
 		}
 
 		pass = [pass stringByReplacingOccurrencesOfString:@"\n" withString:@""];
 
-		@synchronized(pdf){
-			locked = [pdf isLocked];
-		}
-		
-		if(locked){
-			found = [pdf unlockWithPassword: pass];
-			if (found){
-				NSLog(@"Thread %d >> PASS FOUND! >> %@ <<", ID, pass);
-				processing = FALSE;
-				return;
-			}
+		if ([pdf unlockWithPassword: pass]){
+			NSLog(@"Thread %d >> PASS FOUND! >> %@ <<", ID, pass);
+			processing = FALSE;
+			return;
 		}
 
 		if (c%10000 == 1){
-			NSLog(@"Thread %d >> Current word: \"%@\" (%ld passwords tested)", ID, pass, c);
+			NSLog(@"Thread %d >> Current word: \"%@\" (%ld tested)", ID, pass, c);
 			[pool release];
 			pool = [[NSAutoreleasePool alloc] init];
 		}
