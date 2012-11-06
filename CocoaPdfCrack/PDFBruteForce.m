@@ -15,6 +15,7 @@
 	pdf = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: pdfPath] ];
 
 	NSLog(@"loading dictionary");
+	
 	NSString * dict = [NSString stringWithContentsOfURL: [NSURL fileURLWithPath: dictionaryP]];
 
 	NSLog(@"splitting dictionary");
@@ -61,7 +62,7 @@
 		c++;
 
 		if (c%50000 == 1){
-			NSLog(@"Thread %d >> Current word: %@    percent done: %.1f", ID, pass,  c / (double)(end-start));
+			NSLog(@"Thread %d >> Current word: %@    percent done: %.1f", ID, pass,  100.0f * c / (double)(end-start));
 		}
 
 		if ([pdf unlockWithPassword: pass]){
@@ -69,7 +70,7 @@
 		}
 	}
 
-	NSLog(@"Thread %d >> PASS NOT FOUND!", ID);
+	NSLog(@"Thread %d >> PASS NOT FOUND! (%ld passwords tested)", ID, c);
 	
 }
 
