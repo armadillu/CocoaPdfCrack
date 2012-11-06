@@ -61,7 +61,7 @@
 		c++;
 
 		if (c%50000 == 1){
-			NSLog(@"Thread %d >> Current word: %@    percent done: %.1f", ID, pass,  c / (double)[dictSplit count]);
+			NSLog(@"Thread %d >> Current word: %@    percent done: %.1f", ID, pass,  c / (double)(end-start));
 		}
 
 		if ([pdf unlockWithPassword: pass]){

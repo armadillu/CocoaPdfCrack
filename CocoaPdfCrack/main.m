@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
 													dictionaryPath: dictPath];
 
 	[brute startProcessing: numT];
-	
+
     [[NSRunLoop currentRunLoop] run];
 
 	[pool release];
