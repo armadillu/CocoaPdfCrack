@@ -13,32 +13,26 @@
 -(id)initWithPdfPath:(NSString*) pdfPath dictionaryPath:(NSString*) dictionaryP{
 
 	pdf = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: pdfPath] ];
+	fileReader = [[FileReader alloc] initWithFilePath:dictionaryP];
+	processing = FALSE;
 
-	NSLog(@"loading dictionary");
-	
-	NSString * dict = [NSString stringWithContentsOfURL: [NSURL fileURLWithPath: dictionaryP]];
-
-	NSLog(@"splitting dictionary");
-	dictSplit = [[dict componentsSeparatedByString:@"\n"] retain];
-
-	NSLog(@"dict has %ld words", [dictSplit count]);
-
-	processing = NO;
+	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(passwordFound:) name:PDFDocumentDidUnlockNotification object:nil];
 	return self;
 }
 
+//-(void)passwordFound:(id)obj{
+//	NSLog(@"pass found: %@", [obj object]);
+//}
+
 
 -(void)startProcessing:(int)numThreads_{
+
 	numThreads = numThreads_;
-	processing = YES;
+	processing = TRUE;
+
 	for(int i = 0; i < numThreads; i++){
 		[NSThread detachNewThreadSelector:@selector(process:) toTarget:self  withObject:[NSNumber numberWithInt:i]];
 	}
-}
-
--(void)stopProcessing{
-
-	processing = NO;
 }
 
 
@@ -46,35 +40,50 @@
 
 	int ID = [threadID intValue];
 	unsigned long c = 0;
+	NSString * pass;
+	BOOL found = FALSE;
+	BOOL locked;
+	NSAutoreleasePool *	pool = [[NSAutoreleasePool alloc] init];
 
-	unsigned long numPerThread = ([dictSplit count] / numThreads);
-	unsigned long start = ID * numPerThread;
-	unsigned long end = start + numPerThread;
+	while( true ){
 
-	NSLog(@"Thread %d >> start at %ld and end at %ld",ID, start, end);
-	for( unsigned long i = start; i < end; i++){
-
-		if (!processing){
-			NSLog(@"Thread %d >> STOPPED EARLY! PASSWORD ALREADY FOUND (%@)!!", ID, password);
-			return;
-		}
-		NSString * pass = [dictSplit objectAtIndex:i];
-		c++;
-
-		if (c%50000 == 1){
-			NSLog(@"Thread %d >> Current word: %@  >>  %.1f%% done", ID, pass,  100.0f * c / (double)(end-start));
-		}
-
-		if ([pdf unlockWithPassword: pass]){
+		if(!processing){
 			NSLog(@"Thread %d >> PASS FOUND! >> %@ <<", ID, pass);
-			password = [[NSString stringWithString:pass] retain];
-			processing = NO;
-			exit(0);
 			return;
 		}
-	}
 
-	NSLog(@"Thread %d >> PASS NOT FOUND! (%ld passwords tested)", ID, c);
+		@synchronized(fileReader){
+			pass = [fileReader readLine];
+		}
+
+		if (pass == nil){
+			NSLog(@"Thread %d >> PASS NOT FOUND! (%ld passwords tested)", ID, c);
+			return;
+		}
+
+		pass = [pass stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+
+		@synchronized(pdf){
+			locked = [pdf isLocked];
+		}
+		
+		if(locked){
+			found = [pdf unlockWithPassword: pass];
+			if (found){
+				NSLog(@"Thread %d >> PASS FOUND! >> %@ <<", ID, pass);
+				processing = FALSE;
+				return;
+			}
+		}
+
+		if (c%10000 == 1){
+			NSLog(@"Thread %d >> Current word: \"%@\" (%ld passwords tested)", ID, pass, c);
+			[pool release];
+			pool = [[NSAutoreleasePool alloc] init];
+		}
+
+		c++;
+	}
 }
 
 @end

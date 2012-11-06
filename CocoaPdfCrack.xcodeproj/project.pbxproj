@@ -10,6 +10,8 @@
 		BB0FF90B1649905200418526 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0FF90A1649905200418526 /* main.m */; };
 		BB0FF914164990A500418526 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0FF913164990A500418526 /* Quartz.framework */; };
 		BB0FF922164997D300418526 /* PDFBruteForce.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0FF921164997D300418526 /* PDFBruteForce.m */; };
+		BB6910E01649BDFA00573CE7 /* FileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6910DF1649BDFA00573CE7 /* FileReader.m */; };
+		BB6910E41649C20A00573CE7 /* NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6910E31649BE1D00573CE7 /* NSDataExtensions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +32,10 @@
 		BB0FF913164990A500418526 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		BB0FF920164997D300418526 /* PDFBruteForce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFBruteForce.h; sourceTree = "<group>"; };
 		BB0FF921164997D300418526 /* PDFBruteForce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFBruteForce.m; sourceTree = "<group>"; };
+		BB6910DE1649BDFA00573CE7 /* FileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileReader.h; sourceTree = "<group>"; };
+		BB6910DF1649BDFA00573CE7 /* FileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileReader.m; sourceTree = "<group>"; };
+		BB6910E21649BE1D00573CE7 /* NSDataExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSDataExtensions.h; sourceTree = "<group>"; };
+		BB6910E31649BE1D00573CE7 /* NSDataExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSDataExtensions.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,9 +70,13 @@
 		BB0FF9091649905200418526 /* CocoaPdfCrack */ = {
 			isa = PBXGroup;
 			children = (
+				BB6910DE1649BDFA00573CE7 /* FileReader.h */,
+				BB6910DF1649BDFA00573CE7 /* FileReader.m */,
 				BB0FF90A1649905200418526 /* main.m */,
 				BB0FF920164997D300418526 /* PDFBruteForce.h */,
 				BB0FF921164997D300418526 /* PDFBruteForce.m */,
+				BB6910E21649BE1D00573CE7 /* NSDataExtensions.h */,
+				BB6910E31649BE1D00573CE7 /* NSDataExtensions.m */,
 			);
 			path = CocoaPdfCrack;
 			sourceTree = "<group>";
@@ -124,6 +134,8 @@
 			files = (
 				BB0FF90B1649905200418526 /* main.m in Sources */,
 				BB0FF922164997D300418526 /* PDFBruteForce.m in Sources */,
+				BB6910E41649C20A00573CE7 /* NSDataExtensions.m in Sources */,
+				BB6910E01649BDFA00573CE7 /* FileReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,15 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import <Quartz/Quartz.h>
+#import "FileReader.h"
+
 
 
 @interface PDFBruteFroce : NSObject{
-	
-	PDFDocument * pdf ;
-	NSArray * dictSplit;
-	int numThreads ;
-	NSString * password;
 
+	PDFDocument * pdf ;
+	int numThreads ;
+	FileReader* fileReader;
 	BOOL processing;
 }
 
