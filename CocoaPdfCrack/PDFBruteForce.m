@@ -55,23 +55,26 @@
 	for( unsigned long i = start; i < end; i++){
 
 		if (!processing){
-			NSLog(@"Thread %d >> STOPPED EARLY!", ID);
-			break;
+			NSLog(@"Thread %d >> STOPPED EARLY! PASSWORD ALREADY FOUND (%@)!!", ID, password);
+			return;
 		}
 		NSString * pass = [dictSplit objectAtIndex:i];
 		c++;
 
 		if (c%50000 == 1){
-			NSLog(@"Thread %d >> Current word: %@    percent done: %.1f", ID, pass,  100.0f * c / (double)(end-start));
+			NSLog(@"Thread %d >> Current word: %@  >>  %.1f%% done", ID, pass,  100.0f * c / (double)(end-start));
 		}
 
 		if ([pdf unlockWithPassword: pass]){
-			NSLog(@"Thread %d >> PASS FOUND! %@", ID, pass);
+			NSLog(@"Thread %d >> PASS FOUND! >> %@ <<", ID, pass);
+			password = [[NSString stringWithString:pass] retain];
+			processing = NO;
+			exit(0);
+			return;
 		}
 	}
 
 	NSLog(@"Thread %d >> PASS NOT FOUND! (%ld passwords tested)", ID, c);
-	
 }
 
 @end

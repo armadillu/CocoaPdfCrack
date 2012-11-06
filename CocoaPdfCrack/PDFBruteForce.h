@@ -15,6 +15,7 @@
 	PDFDocument * pdf ;
 	NSArray * dictSplit;
 	int numThreads ;
+	NSString * password;
 
 	BOOL processing;
 }
