@@ -6,4 +6,4 @@ This is a very rough command line app I built in a rush for myself. Don't expect
 
 usage: CocoaPdfCrack encrypted.pdf wordlist.txt numThreads
 
-uses LineReader class by Dave DeLong found https://github.com/johnjohndoe/LineReader#readme
+uses LineReader class by Dave DeLong found https://github.com/johnjohndoe/LineReader#readme 
